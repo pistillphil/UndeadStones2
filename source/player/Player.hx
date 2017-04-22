@@ -2,23 +2,34 @@ package player;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxColor;
+import flixel.FlxObject;
 import flixel.math.FlxPoint;
 
 class Player extends FlxSprite
 {
 
-    public var speed:Float = 300;
+    public var speed:Float = 200;
 
     public function new(?X:Float=0, ?Y:Float=0)
     {
         super(X, Y);
 
-        // The graphics of the Player
-        makeGraphic(16, 16, FlxColor.BLUE);
+        // Load the graphics for the Player
+        loadGraphic(AssetPaths.heroes__png, true, 16, 16);
+        // Flip the sprites when player faces left
+        setFacingFlip(FlxObject.LEFT, true, false);
+        setFacingFlip(FlxObject.RIGHT, false, false);
+
+        // Set correct sprites to be used, depending on movement direction
+        animation.add("lr", [84, 85, 84, 86, 84], 10, false);
+        animation.add("u", [100, 101, 100, 102, 100], 10, false);
+        animation.add("d", [68, 69, 68, 70, 68], 10, false);
+
+        // Activate animation to display the right frame per default
+        animation.play("d");
 
         // Set Deceleration of the Player (when not affected by acceleration)
-        drag.x = drag.y = 1000;
+        drag.x = drag.y = 750;
     }
 
     override public function update(elapsed:Float):Void
@@ -71,6 +82,7 @@ class Player extends FlxSprite
                 {
                     movement_angle += 45;
                 }
+                facing = FlxObject.UP;
             }
             else if(_down)
             {
@@ -83,19 +95,36 @@ class Player extends FlxSprite
                 {
                     movement_angle -= 45;
                 }
+                facing = FlxObject.DOWN;
             }
             else if(_left)
             {
                 movement_angle = 180;
+                facing = FlxObject.LEFT;
             }
             else if(_right)
             {
                 movement_angle = 0;
+                facing = FlxObject.RIGHT;
             }
 
             // Perform the actual movement
             velocity.set(speed, 0); // Set only x-velocity to speed, y-velocity to 0
             velocity.rotate(FlxPoint.weak(0, 0), movement_angle);   // Rotate the velocity to the right angle
+
+            // Update the animation if moving according on the facing of the player
+            if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
+            {
+                switch (facing)
+                {
+                    case FlxObject.LEFT, FlxObject.RIGHT:
+                        animation.play("lr");
+                    case FlxObject.UP:
+                        animation.play("u");
+                    case FlxObject.DOWN:
+                        animation.play("d");
+                }
+            }
         }
 	}
 }
