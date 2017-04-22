@@ -2,7 +2,9 @@ package;
 
 import flixel.FlxState;
 
+import flixel.FlxG;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 
 class MenuState extends FlxState
 {
@@ -22,8 +24,15 @@ class MenuState extends FlxState
 		super.update(elapsed);
 	}
 
+	/**
+	 *  Fades to black and switches the state to PlayState
+	 *  
+	 */
 	private function start_game():Void
 	{
-		flixel.FlxG.switchState(new PlayState());
+		FlxG.camera.fade(FlxColor.BLACK, .33, false, function()
+		{
+			FlxG.switchState(new PlayState());
+		});
 	}
 }
