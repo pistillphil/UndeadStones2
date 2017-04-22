@@ -8,7 +8,7 @@ import flixel.math.FlxPoint;
 class Player extends FlxSprite
 {
 
-    public var speed:Float = 200;
+    public var speed:Float = 175;
 
     public function new(?X:Float=0, ?Y:Float=0)
     {
@@ -30,6 +30,10 @@ class Player extends FlxSprite
 
         // Set Deceleration of the Player (when not affected by acceleration)
         drag.x = drag.y = 750;
+
+        // Decrease the hitbox size of the player
+        setSize(14, 14);
+        offset.set(4, 4);
     }
 
     override public function update(elapsed:Float):Void
@@ -113,7 +117,7 @@ class Player extends FlxSprite
             velocity.rotate(FlxPoint.weak(0, 0), movement_angle);   // Rotate the velocity to the right angle
 
             // Update the animation if moving according on the facing of the player
-            if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
+            if (velocity.x != 0 || velocity.y != 0)
             {
                 switch (facing)
                 {
