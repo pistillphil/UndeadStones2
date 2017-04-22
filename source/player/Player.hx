@@ -33,12 +33,14 @@ class Player extends FlxSprite
 
         // Decrease the hitbox size of the player
         setSize(14, 14);
-        offset.set(2, 2);
+        offset.set(1, 1);
     }
 
     override public function update(elapsed:Float):Void
     {
         movement();
+
+        play_animation();
         super.update(elapsed);
     }
 
@@ -115,20 +117,27 @@ class Player extends FlxSprite
             // Perform the actual movement
             velocity.set(speed, 0); // Set only x-velocity to speed, y-velocity to 0
             velocity.rotate(FlxPoint.weak(0, 0), movement_angle);   // Rotate the velocity to the right angle
-
-            // Update the animation if moving according on the facing of the player
-            if (velocity.x != 0 || velocity.y != 0)
-            {
-                switch (facing)
-                {
-                    case FlxObject.LEFT, FlxObject.RIGHT:
-                        animation.play("lr");
-                    case FlxObject.UP:
-                        animation.play("u");
-                    case FlxObject.DOWN:
-                        animation.play("d");
-                }
-            }
+            
         }
 	}
+
+    /**
+     *  Update the animation if moving according on the facing of the player
+     *  
+     */
+    private function play_animation():Void
+    {
+        if (velocity.x != 0 || velocity.y != 0)
+        {
+            switch (facing)
+            {
+                case FlxObject.LEFT, FlxObject.RIGHT:
+                    animation.play("lr");
+                case FlxObject.UP:
+                    animation.play("u");
+                case FlxObject.DOWN:
+                    animation.play("d");
+            }
+        }
+    }
 }
