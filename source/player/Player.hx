@@ -33,7 +33,7 @@ class Player extends FlxSprite
 
         // Decrease the hitbox size of the player
         setSize(14, 14);
-        offset.set(4, 4);
+        offset.set(2, 2);
     }
 
     override public function update(elapsed:Float):Void
