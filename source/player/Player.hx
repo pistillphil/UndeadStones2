@@ -21,11 +21,11 @@ class Player extends FlxSprite
         setFacingFlip(FlxObject.RIGHT, false, false);
 
         // Set correct sprites to be used, depending on movement direction
-        animation.add("lr", [84, 85, 84, 86, 84], 10, false);
-        animation.add("u", [100, 101, 100, 102, 100], 10, false);
-        animation.add("d", [68, 69, 68, 70, 68], 10, false);
+        animation.add("lr", [85, 84, 86, 84], 10, false);
+        animation.add("u", [101, 100, 102, 100], 10, false);
+        animation.add("d", [69, 68, 70, 68], 10, false);
 
-        // Activate animation to display the right frame per default
+        // Activate animation to display the right frame after spawning
         animation.play("d");
 
         // Set Deceleration of the Player (when not affected by acceleration)
