@@ -176,6 +176,8 @@ class Player extends FlxSprite
             animation.play("u");
             // Start the timer for checking cooldown_tracker_cooldown_tracker
             _cooldown_tracker.start(spell.cooldown);
+            // Start the timer tracking the life-time of the spell
+            spell.timer.start(spell.time_to_live, spell.timeout);
         }
         else if(FlxG.keys.pressed.DOWN)
         {
@@ -192,6 +194,8 @@ class Player extends FlxSprite
             animation.play("d");
             // Start the timer for checking cooldown_tracker_cooldown_tracker
             _cooldown_tracker.start(spell.cooldown);
+            // Start the timer tracking the life-time of the spell
+            spell.timer.start(spell.time_to_live, spell.timeout);
         }
         else if(FlxG.keys.pressed.LEFT)
         {
@@ -208,6 +212,8 @@ class Player extends FlxSprite
             animation.play("lr");
             // Start the timer for checking cooldown_tracker_cooldown_tracker
             _cooldown_tracker.start(spell.cooldown);
+            // Start the timer tracking the life-time of the spell
+            spell.timer.start(spell.time_to_live, spell.timeout);
         }
         else if(FlxG.keys.pressed.RIGHT)
         {
@@ -224,6 +230,8 @@ class Player extends FlxSprite
             animation.play("lr");
             // Start the timer for checking cooldown_tracker_cooldown_tracker
             _cooldown_tracker.start(spell.cooldown);
+            // Start the timer tracking the life-time of the spell
+            spell.timer.start(spell.time_to_live, spell.timeout);
         }
      }
 

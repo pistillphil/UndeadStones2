@@ -66,6 +66,8 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		// Check for player collisions with walls
 		FlxG.collide(_player, _tilemap);
+		// Check for spell collisions with walls
+		FlxG.collide(spells, _tilemap);
 	}
 
 	/**
