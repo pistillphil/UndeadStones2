@@ -6,15 +6,26 @@ import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.tile.FlxTilemap;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.group.FlxGroup;
 
 import player.Player;
+import spells.Spell;
 
 class PlayState extends FlxState
 {
 
-	private var _player:Player;
+	// Map
 	private var _ogmo_map:FlxOgmoLoader;
 	private var _tilemap:FlxTilemap;
+
+	// Player
+	private var _player:Player;
+
+	// TODO: Enemies
+
+	// Spells
+	public static var spells:FlxTypedGroup<Spell>;
+	private var _spell_pool_size:Int = 9;
 
 	override public function create():Void
 	{
@@ -35,6 +46,17 @@ class PlayState extends FlxState
 
 		// Let the camera follow the player
 		FlxG.camera.follow(_player, TOPDOWN, 1);
+
+		// Initialize the spell pool
+		spells = new FlxTypedGroup<Spell>(_spell_pool_size);
+		for(i in 0..._spell_pool_size)
+		{
+			spells.add(new Spell());
+		}
+		add(spells);
+
+		// Hide cursor
+		FlxG.mouse.visible = false;
 
 		super.create();
 	}

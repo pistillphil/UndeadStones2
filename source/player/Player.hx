@@ -4,11 +4,17 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
+import flixel.util.FlxTimer;
+
+import spells.Spell;
+import PlayState;
 
 class Player extends FlxSprite
 {
 
     public var speed:Float = 175;
+
+    private var _cooldown_tracker:FlxTimer;
 
     public function new(?X:Float=0, ?Y:Float=0)
     {
@@ -19,6 +25,9 @@ class Player extends FlxSprite
         // Flip the sprites when player faces left
         setFacingFlip(FlxObject.LEFT, true, false);
         setFacingFlip(FlxObject.RIGHT, false, false);
+
+        // Initialize the timer keeping track of when the last spell was cast
+        _cooldown_tracker = new FlxTimer();
 
         // Set correct sprites to be used, depending on movement direction
         animation.add("lr", [85, 84, 86, 84], 10, false);
@@ -32,20 +41,20 @@ class Player extends FlxSprite
         drag.x = drag.y = 750;
 
         // Decrease the hitbox size of the player
-        setSize(14, 14);
-        offset.set(1, 1);
+        setSize(12, 14);
+        offset.set(2, 1);
     }
 
     override public function update(elapsed:Float):Void
     {
         movement();
-
+        spelling();
         play_animation();
         super.update(elapsed);
     }
 
 	/**
-	 *  Handles the input and movement of the player
+	 *  Handles the movement input of the player
 	 *  
 	 */
 	private function movement():Void
@@ -121,15 +130,112 @@ class Player extends FlxSprite
         }
 	}
 
+   /**
+    *  Handles the shooting input of the player
+    *  
+    */
+   function spelling():Void
+     {
+        // Align player according to where he aims, regardless of movement or cooldown
+        if(FlxG.keys.pressed.UP)
+        {
+            facing = FlxObject.UP;
+        }
+        else if(FlxG.keys.pressed.DOWN)
+        {
+            facing = FlxObject.DOWN;
+        }
+        else if(FlxG.keys.pressed.LEFT)
+        {
+            facing = FlxObject.LEFT;
+        }
+        else if(FlxG.keys.pressed.RIGHT)
+        {
+            facing = FlxObject.RIGHT;
+        }
+
+         // Check if still on cooldown_tracker_cooldown_tracker
+         if(_cooldown_tracker.active)
+         {
+             return;
+         }
+        
+        // Cast spells, depending on input and cooldown
+        if(FlxG.keys.pressed.UP)
+        {
+            // Get a spell from the spell pool and set position and velocity
+            var spell:Spell = PlayState.spells.recycle();
+            spell.x = x;
+            spell.y = y;
+            spell.velocity.set(spell.speed, 0);
+            spell.velocity.rotate(FlxPoint.weak(0, 0), -90);
+            // Start playing the spell animation
+            spell.animation.play("spelled");
+            spell.facing = FlxObject.UP;
+            // Play the player animation to update facing if standing still
+            animation.play("u");
+            // Start the timer for checking cooldown_tracker_cooldown_tracker
+            _cooldown_tracker.start(spell.cooldown);
+        }
+        else if(FlxG.keys.pressed.DOWN)
+        {
+            // Get a spell from the spell pool and set position and velocity
+            var spell:Spell = PlayState.spells.recycle();
+            spell.x = x;
+            spell.y = y;
+            spell.velocity.set(spell.speed, 0);
+            spell.velocity.rotate(FlxPoint.weak(0, 0), 90);
+            // Start playing the spell animation
+            spell.animation.play("spelled");
+            spell.facing = FlxObject.DOWN;
+            // Play the player animation to update facing if standing still
+            animation.play("d");
+            // Start the timer for checking cooldown_tracker_cooldown_tracker
+            _cooldown_tracker.start(spell.cooldown);
+        }
+        else if(FlxG.keys.pressed.LEFT)
+        {
+            // Get a spell from the spell pool and set position and velocity
+            var spell:Spell = PlayState.spells.recycle();
+            spell.x = x;
+            spell.y = y;
+            spell.velocity.set(spell.speed, 0);
+            spell.velocity.rotate(FlxPoint.weak(0, 0), 180);
+            // Start playing the spell animation
+            spell.animation.play("spelled");
+            spell.facing = FlxObject.LEFT;
+            // Play the player animation to update facing if standing still
+            animation.play("lr");
+            // Start the timer for checking cooldown_tracker_cooldown_tracker
+            _cooldown_tracker.start(spell.cooldown);
+        }
+        else if(FlxG.keys.pressed.RIGHT)
+        {
+            // Get a spell from the spell pool and set position and velocity
+            var spell:Spell = PlayState.spells.recycle();
+            spell.x = x;
+            spell.y = y;
+            spell.velocity.set(spell.speed, 0);
+            spell.velocity.rotate(FlxPoint.weak(0, 0), 0);
+            // Start playing the spell animation
+            spell.animation.play("spelled");
+            spell.facing = FlxObject.RIGHT;
+            // Play the player animation to update facing if standing still
+            animation.play("lr");
+            // Start the timer for checking cooldown_tracker_cooldown_tracker
+            _cooldown_tracker.start(spell.cooldown);
+        }
+     }
+
     /**
      *  Update the animation if moving according on the facing of the player
      *  
      */
     private function play_animation():Void
     {
-        if (velocity.x != 0 || velocity.y != 0)
+        if(velocity.x != 0 || velocity.y != 0)
         {
-            switch (facing)
+            switch(facing)
             {
                 case FlxObject.LEFT, FlxObject.RIGHT:
                     animation.play("lr");
